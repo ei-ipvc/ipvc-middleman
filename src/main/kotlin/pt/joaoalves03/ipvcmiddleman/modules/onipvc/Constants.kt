@@ -7,5 +7,5 @@ object Constants {
     return "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade_grelha.php?cd_curso=$course&cd_letivo=202324"
   }
   const val ATTENDANCE_YEARS = "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade.php"
-  const val ATTENDANCE_COURSE = "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade_select_curso.php"
+  const val ATTENDANCE_COURSES = "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade_select_curso.php"
 }

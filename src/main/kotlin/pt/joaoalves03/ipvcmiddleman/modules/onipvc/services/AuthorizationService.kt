@@ -29,10 +29,15 @@ object AuthorizationService {
           throw IncorrectCredentialsException()
         }
 
-        return response.headers.values("Set-Cookie")
-          .find { it.startsWith("PHPSESSID") }
-          ?.substringAfter("PHPSESSID=")
-          ?.substringBefore(";").orEmpty()
+        return buildString {
+          append(response.headers.values("Set-Cookie")
+            .find { it.startsWith("PHPSESSID") }
+            ?.substringBefore(";").orEmpty())
+          append(";")
+          append(response.headers.values("Set-Cookie")
+            .find { it.startsWith("ONIPVC=") }
+            ?.substringBefore(";").orEmpty())
+        }
       }
     } catch (e: IOException) {
       return ""

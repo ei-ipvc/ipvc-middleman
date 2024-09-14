@@ -12,7 +12,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 @RequestMapping("/onipvc/attendance")
 class AttendanceController {
   @GetMapping("years")
-  fun attendance(@RequestHeader("x-auth-onipvc") token: String): ResponseEntity<List<AttendanceYearsDTO>> {
-    return ResponseEntity.ok(AttendanceService.getAvailableYears(token))
+  fun attendance(@RequestHeader("x-auth-onipvc") cookie: String): ResponseEntity<List<AttendanceYearsDTO>> {
+    return ResponseEntity.ok(AttendanceService.getAvailableYears(cookie))
   }
 }

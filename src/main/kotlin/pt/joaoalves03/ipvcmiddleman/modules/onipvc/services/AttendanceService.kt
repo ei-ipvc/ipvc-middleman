@@ -6,20 +6,9 @@ import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDTO
-import java.lang.StringBuilder
 
 object AttendanceService {
-  private fun generateCookie(token: String): String {
-    return StringBuilder()
-      .append("PHPSESSID=")
-      .append(token)
-      .append("; ONIPVC=ONIPVC_APP01")
-      .toString()
-  }
-
-  fun getAvailableYears(token: String): List<AttendanceYearsDTO> {
-    val cookie = generateCookie(token)
-
+  fun getAvailableYears(cookie: String): List<AttendanceYearsDTO> {
     val request = Request.Builder()
       .url(Constants.ATTENDANCE_YEARS)
       .header("Cookie", cookie)
