@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizationDTO
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
-import pt.joaoalves03.ipvcmiddleman.IncorrectCredentialsException
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.Authorization as OnIPVCAuth
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AuthorizationService as OnIPVCAuth
 
 @RestController
 class AuthController {

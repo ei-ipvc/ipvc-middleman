@@ -8,7 +8,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.IncorrectCredentialsException
 import java.io.IOException
 
-object Authorization {
+object AuthorizationService {
   fun getAuthorization(body: AuthorizeDTO): String {
     val formBody = FormBody.Builder()
       .add("on-user", body.username)
@@ -22,7 +22,7 @@ object Authorization {
       .build()
 
     try {
-      HttpClient.instance.newCall(request).execute().use { response ->
+        HttpClient.instance.newCall(request).execute().use { response ->
         val resBody = response.body!!.string()
 
         if (resBody.contains("ERROR")) {
