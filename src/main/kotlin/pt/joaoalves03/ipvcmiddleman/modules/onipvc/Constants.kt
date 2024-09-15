@@ -9,4 +9,7 @@ object Constants {
   const val ATTENDANCE_YEARS = "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade.php"
   const val ATTENDANCE_COURSES = "https://on.ipvc.pt/v1/modulos/atividadeletiva/alunos_mapa_assiduidade_select_curso.php"
   const val SCHEDULE_ENDPOINT = "https://on.ipvc.pt/v1/modulos/atividadeletiva/horario_source_v3.php"
+  fun curricularUnitInfoEndpoint(courseId: String, unitId: String): String {
+    return "https://on.ipvc.pt/v1/puc.php?cd_curso=$courseId&cd_discip=$unitId&lang=pt"
+  }
 }
