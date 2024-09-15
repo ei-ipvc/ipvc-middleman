@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 
@@ -25,5 +26,14 @@ class AttendanceController {
     @RequestParam("year") year: String
   ): ResponseEntity<List<AttendanceCourseDTO>> {
     return ResponseEntity.ok(AttendanceService.getAvailableCourses(cookie, username, year))
+  }
+
+  @GetMapping("")
+  fun attendance(
+    @RequestHeader("x-auth-onipvc") cookie: String,
+    @RequestParam("courseId") courseId: String,
+    @RequestParam("year") year: String
+  ): ResponseEntity<List<AttendanceDTO>> {
+    return ResponseEntity.ok(AttendanceService.getAttendance(cookie, courseId, year))
   }
 }
