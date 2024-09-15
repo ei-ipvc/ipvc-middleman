@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.dto
 
-class AuthorizeDTO {
-  val username = ""
-  val password = ""
-}
+data class AuthorizeDTO(
+  val username: String,
+  val password: String
+)

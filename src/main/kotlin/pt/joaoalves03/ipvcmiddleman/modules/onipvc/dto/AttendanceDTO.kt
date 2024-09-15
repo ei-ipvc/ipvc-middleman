@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto
 
-class AttendanceDTO(
+data class AttendanceDTO(
   val subjectId: String,
   val subjectName: String,
   val classType: String,

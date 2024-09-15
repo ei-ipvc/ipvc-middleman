@@ -18,16 +18,10 @@ class AuthController {
     @RequestParam(required = false) onipvc: Boolean,
     @RequestParam(required = false) academicos: Boolean
   ) : ResponseEntity<AuthorizationDTO> {
-    val authorization = AuthorizationDTO()
-
-    if(onipvc) {
-      authorization.onipvc = OnIPVCAuth.getAuthorization(body)
-    }
-
-    if(academicos) {
-      authorization.academicos = AcademicosAuth.getAuthorization(body)
-    }
-
-    return ResponseEntity.ok(authorization)
+    return ResponseEntity.ok(AuthorizationDTO(
+      onipvc = if (onipvc) OnIPVCAuth.getAuthorization(body) else null,
+      academicos = if (academicos) AcademicosAuth.getAuthorization(body) else null,
+      moodle = null
+    ))
   }
 }
