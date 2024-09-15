@@ -5,7 +5,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import pt.joaoalves03.ipvcmiddleman.HttpClient
-import pt.joaoalves03.ipvcmiddleman.IncorrectCredentialsException
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.ProfileDTO
 import java.util.*
