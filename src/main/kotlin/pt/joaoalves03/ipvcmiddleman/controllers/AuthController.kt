@@ -9,6 +9,7 @@ import pt.joaoalves03.ipvcmiddleman.dto.AuthorizationDTO
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AuthorizationService as OnIPVCAuth
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.AuthorizationService as AcademicosAuth
+import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.AuthorizationService as MoodleAuth
 
 @RestController
 class AuthController {
@@ -16,12 +17,13 @@ class AuthController {
   fun authorize(
     @RequestBody body: AuthorizeDTO,
     @RequestParam(required = false) onipvc: Boolean,
-    @RequestParam(required = false) academicos: Boolean
+    @RequestParam(required = false) academicos: Boolean,
+    @RequestParam(required = false) moodle: Boolean
   ) : ResponseEntity<AuthorizationDTO> {
     return ResponseEntity.ok(AuthorizationDTO(
       onipvc = if (onipvc) OnIPVCAuth.getAuthorization(body) else null,
       academicos = if (academicos) AcademicosAuth.getAuthorization(body) else null,
-      moodle = null
+      moodle = if (moodle) MoodleAuth.getAuthorization(body) else null
     ))
   }
 }
