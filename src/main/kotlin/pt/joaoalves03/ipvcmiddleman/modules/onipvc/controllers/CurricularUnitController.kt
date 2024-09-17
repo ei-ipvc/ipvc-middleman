@@ -10,12 +10,14 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.CurricularUnitServic
 
 @RestController
 @RequestMapping("/onipvc/curricularUnit")
-class CurricularUnitController {
+class CurricularUnitController(
+  private val curricularUnitService: CurricularUnitService,
+) {
   @GetMapping("")
   fun getCurricularUnitInfo(
     @RequestParam("courseId") courseId: Int,
     @RequestParam("unitId") unitId: Int,
   ): ResponseEntity<CurricularUnitDTO> {
-    return ResponseEntity.ok(CurricularUnitService.getCurricularUnitInfo(courseId, unitId))
+    return ResponseEntity.ok(curricularUnitService.fetchCurricularUnitInfo(courseId, unitId))
   }
 }

@@ -1,0 +1,7 @@
+services:
+  db:
+    image: 'valkey/valkey:8.0-alpine3.20'
+    container_name: db
+    hostname: valkey
+    ports:
+      - 6379:6379

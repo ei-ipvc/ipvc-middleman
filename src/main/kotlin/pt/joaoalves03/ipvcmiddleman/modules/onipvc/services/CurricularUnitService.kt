@@ -2,13 +2,19 @@ package pt.joaoalves03.ipvcmiddleman.modules.onipvc.services
 
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.ServiceUnavailableException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.CurricularUnitDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.NameHours
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 
-object CurricularUnitService {
+@Service
+class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any>) {
   private fun parseTeachers(input: String): List<NameHours> {
     val r1 = Regex("[^(]+(?=\\()", RegexOption.IGNORE_CASE)
     val r2 = Regex("\\d+H", RegexOption.IGNORE_CASE)
@@ -20,7 +26,14 @@ object CurricularUnitService {
   }
 
   // Enjoy :)
-  fun getCurricularUnitInfo(courseId: Int, unitId: Int): CurricularUnitDTO {
+  fun fetchCurricularUnitInfo(courseId: Int, unitId: Int): CurricularUnitDTO {
+    val info = getCurricularUnitInfo(unitId)
+    if (info != null && ChronoUnit.DAYS.between(
+        Instant.parse(info.lastUpdate),
+        Instant.now()
+      ) < 1
+    ) return info
+
     val request = Request.Builder()
       .url(Constants.curricularUnitInfoEndpoint(courseId.toString(), unitId.toString()))
       .get()
@@ -60,7 +73,7 @@ object CurricularUnitService {
         }
 
 
-      return CurricularUnitDTO(
+      val fetchedInfo = CurricularUnitDTO(
         school = infoSectionLeft.select("b:contains(ESCOLA)").first()!!.nextSibling()!!.toString().trim(),
         schoolYear = infoSectionLeft.select("b:contains(ANO LECTIVO)").first()!!.nextSibling()!!.toString().trim(),
         mainTeacher = parseTeachers(
@@ -90,7 +103,22 @@ object CurricularUnitService {
         evaluation = data.selectFirst("#avaliacao")!!.selectFirst(".panel-body")!!.text().trim(),
         mainBibliography = data.selectFirst("#bibliografia")!!.selectFirst(".panel-body")!!.text().trim(),
         complementaryBibliography = data.selectFirst("#bibliografia_comp")!!.selectFirst(".panel-body")!!.text().trim(),
+
+        lastUpdate = java.time.format.DateTimeFormatter.ISO_INSTANT
+          .format(Instant.now().atOffset(ZoneOffset.UTC))
       )
+
+      saveCurricularUnitInfo(unitId, fetchedInfo)
+
+      return fetchedInfo
     }
+  }
+
+  fun saveCurricularUnitInfo(unitId: Int, info: CurricularUnitDTO) {
+    redisTemplate.opsForValue().set("curricularUnitInfo:${unitId}", info)
+  }
+
+  fun getCurricularUnitInfo(unitId: Int): CurricularUnitDTO? {
+    return redisTemplate.opsForValue().get("curricularUnitInfo:${unitId}") as CurricularUnitDTO?
   }
 }

@@ -10,9 +10,9 @@ import pt.joaoalves03.ipvcmiddleman.modules.ipvc.services.TeacherEmailService
 
 @RestController
 @RequestMapping("/ipvc/email")
-class EmailController {
+class EmailController(private val teacherEmailService: TeacherEmailService) {
   @GetMapping("")
   fun getEmail(@RequestParam name: String): ResponseEntity<List<TeacherInfoDTO>> {
-    return ResponseEntity.ok(TeacherEmailService.getTeacherEmail(name))
+    return ResponseEntity.ok(teacherEmailService.getTeacherEmail(name))
   }
 }

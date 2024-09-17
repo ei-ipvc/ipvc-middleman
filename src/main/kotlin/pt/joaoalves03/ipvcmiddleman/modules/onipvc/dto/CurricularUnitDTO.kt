@@ -1,5 +1,9 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto
 
+import org.springframework.data.redis.core.RedisHash
+import java.io.Serializable
+
+@RedisHash
 data class CurricularUnitDTO(
   val school: String,
   val schoolYear: String,
@@ -21,4 +25,6 @@ data class CurricularUnitDTO(
   val evaluation: String,
   val mainBibliography: String,
   val complementaryBibliography: String,
-)
+
+  val lastUpdate: String
+): Serializable
