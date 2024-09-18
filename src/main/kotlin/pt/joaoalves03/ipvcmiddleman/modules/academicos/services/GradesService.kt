@@ -2,11 +2,13 @@ package pt.joaoalves03.ipvcmiddleman.modules.academicos.services
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.Request
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeDTO
 
-object GradesService {
+@Service
+class GradesService {
   private val mapper = jacksonObjectMapper()
 
   fun getGrades(cookie: String): List<GradeDTO> {

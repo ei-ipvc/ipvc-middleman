@@ -7,12 +7,14 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import okhttp3.FormBody
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.RawScheduleDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDTO
 
-object ScheduleService {
+@Service
+class ScheduleService {
   private fun parseSchedulesHtmlContent(content: String): List<RawScheduleDTO>? {
     val regex = Regex("events_data\\s=\\s(.+);", RegexOption.MULTILINE)
     val match = regex.find(content) ?: return null

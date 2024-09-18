@@ -4,12 +4,14 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.ProfileDTO
 import java.util.*
 
-object ProfileService {
+@Service
+class ProfileService {
   private fun parseCourse(profileData: Element): Pair<String, String> {
     val data = profileData.select("ul:nth-child(1) > li:nth-child(4)")
       .text().replace("[", "").replace("]", "")

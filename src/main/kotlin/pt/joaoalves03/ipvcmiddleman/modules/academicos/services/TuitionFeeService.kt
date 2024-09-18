@@ -2,12 +2,14 @@ package pt.joaoalves03.ipvcmiddleman.modules.academicos.services
 
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.TuitionFee
 import java.math.BigDecimal
 
-object TuitionFeeService {
+@Service
+class TuitionFeeService {
   private fun parseValue(data: String): BigDecimal {
     return data.split(" ")[0].toBigDecimal()
   }

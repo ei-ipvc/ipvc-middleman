@@ -7,7 +7,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.ScheduleService
 
 @RestController
 @RequestMapping("/onipvc/schedule")
-class ScheduleController {
+class ScheduleController(private val scheduleService: ScheduleService) {
   @GetMapping("")
   fun schedule(
     @RequestHeader("x-auth-onipvc") cookie: String,
@@ -15,6 +15,6 @@ class ScheduleController {
     @RequestParam("semester") semester: String,
     @RequestParam("studentId") studentId: String
   ): ResponseEntity<List<ScheduleDTO>> {
-    return ResponseEntity.ok(ScheduleService.getSchedule(cookie, year, semester, studentId))
+    return ResponseEntity.ok(scheduleService.getSchedule(cookie, year, semester, studentId))
   }
 }

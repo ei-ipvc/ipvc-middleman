@@ -13,10 +13,10 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 
 @RestController
 @RequestMapping("/onipvc/attendance")
-class AttendanceController {
+class AttendanceController(val attendanceService: AttendanceService) {
   @GetMapping("years")
   fun attendance(@RequestHeader("x-auth-onipvc") cookie: String): ResponseEntity<List<AttendanceYearsDTO>> {
-    return ResponseEntity.ok(AttendanceService.getAvailableYears(cookie))
+    return ResponseEntity.ok(attendanceService.getAvailableYears(cookie))
   }
 
   @GetMapping("courses")
@@ -25,7 +25,7 @@ class AttendanceController {
     @RequestParam("username") username: String,
     @RequestParam("year") year: String
   ): ResponseEntity<List<AttendanceCourseDTO>> {
-    return ResponseEntity.ok(AttendanceService.getAvailableCourses(cookie, username, year))
+    return ResponseEntity.ok(attendanceService.getAvailableCourses(cookie, username, year))
   }
 
   @GetMapping("")
@@ -34,6 +34,6 @@ class AttendanceController {
     @RequestParam("courseId") courseId: String,
     @RequestParam("year") year: String
   ): ResponseEntity<List<AttendanceDTO>> {
-    return ResponseEntity.ok(AttendanceService.getAttendance(cookie, courseId, year))
+    return ResponseEntity.ok(attendanceService.getAttendance(cookie, courseId, year))
   }
 }

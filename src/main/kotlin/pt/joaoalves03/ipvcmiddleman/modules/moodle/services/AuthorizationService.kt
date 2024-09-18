@@ -3,6 +3,7 @@ package pt.joaoalves03.ipvcmiddleman.modules.moodle.services
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import okhttp3.Request
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
@@ -11,7 +12,8 @@ import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.AuthResponse
 import java.io.IOException
 import java.net.URLEncoder
 
-object AuthorizationService {
+@Service
+class AuthorizationService {
   private val mapper = jacksonObjectMapper()
 
   fun getAuthorization(body: AuthorizeDTO): String {

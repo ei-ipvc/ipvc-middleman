@@ -10,9 +10,9 @@ import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.TuitionFeeServic
 
 @RestController
 @RequestMapping("/academicos/tuitionFees")
-class TuitionFeeController {
+class TuitionFeeController(private val tuitionFeeService: TuitionFeeService) {
   @GetMapping("")
   fun getTuitionFees(@RequestHeader("x-auth-academicos") cookie: String) : ResponseEntity<List<TuitionFee>>{
-    return ResponseEntity.ok(TuitionFeeService.getTuitionFees(cookie))
+    return ResponseEntity.ok(tuitionFeeService.getTuitionFees(cookie))
   }
 }

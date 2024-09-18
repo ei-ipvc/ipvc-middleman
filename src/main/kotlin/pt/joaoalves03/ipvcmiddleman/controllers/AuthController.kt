@@ -12,7 +12,11 @@ import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.AuthorizationSer
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.AuthorizationService as MoodleAuth
 
 @RestController
-class AuthController {
+class AuthController(
+  val onIPVCAuth: OnIPVCAuth,
+  val academicosAuth: AcademicosAuth,
+  val moodleAuth: MoodleAuth,
+) {
   @PostMapping("authorize")
   fun authorize(
     @RequestBody body: AuthorizeDTO,
@@ -21,9 +25,9 @@ class AuthController {
     @RequestParam(required = false) moodle: Boolean
   ) : ResponseEntity<AuthorizationDTO> {
     return ResponseEntity.ok(AuthorizationDTO(
-      onipvc = if (onipvc) OnIPVCAuth.getAuthorization(body) else null,
-      academicos = if (academicos) AcademicosAuth.getAuthorization(body) else null,
-      moodle = if (moodle) MoodleAuth.getAuthorization(body) else null
+      onipvc = if (onipvc) onIPVCAuth.getAuthorization(body) else null,
+      academicos = if (academicos) academicosAuth.getAuthorization(body) else null,
+      moodle = if (moodle) moodleAuth.getAuthorization(body) else null
     ))
   }
 }

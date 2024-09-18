@@ -10,9 +10,9 @@ import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.ProfileService
 
 @RestController
 @RequestMapping("/academicos/profile")
-class ProfileController {
+class ProfileController(val profileService: ProfileService) {
   @GetMapping("")
   fun profile(@RequestHeader("x-auth-academicos") cookie: String): ResponseEntity<ProfileDTO> {
-    return ResponseEntity.ok(ProfileService.getProfile(cookie))
+    return ResponseEntity.ok(profileService.getProfile(cookie))
   }
 }

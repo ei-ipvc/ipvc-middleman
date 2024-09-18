@@ -8,6 +8,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.jsoup.Jsoup
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
@@ -15,7 +16,8 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDTO
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDTO
 
-object AttendanceService {
+@Service
+class AttendanceService {
   private val mapper: ObjectMapper = jacksonObjectMapper()
 
   fun getAvailableYears(cookie: String): List<AttendanceYearsDTO> {

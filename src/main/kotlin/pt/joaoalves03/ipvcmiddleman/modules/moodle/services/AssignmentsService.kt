@@ -2,12 +2,14 @@ package pt.joaoalves03.ipvcmiddleman.modules.moodle.services
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.Request
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.Assignment
 
-object AssignmentsService {
+@Service
+class AssignmentsService {
   private val mapper = jacksonObjectMapper()
 
   fun getAssignments(token: String): List<Assignment> {
