@@ -76,8 +76,6 @@ class AttendanceService {
       if(data.contains("N/D"))
         throw UnauthorizedException()
 
-      println(data)
-
       val jsonNode = mapper.readTree(data)
 
       return jsonNode["aaData"].map { row ->

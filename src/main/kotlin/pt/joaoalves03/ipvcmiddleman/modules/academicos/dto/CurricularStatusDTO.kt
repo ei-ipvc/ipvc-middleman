@@ -1,13 +1,13 @@
 package pt.joaoalves03.ipvcmiddleman.modules.academicos.dto
 
-data class GradeDTO(
-  val evaluationDate: String,
+data class CurricularStatusDTO(
+  val evaluationDate: String?,
   val curricularUnitId: String,
   val schoolYear: String,
-  val credits: Int,
+  val credits: String,
   val semester: Int,
   val curricularUnitName: String,
-  val finalGrade: Float,
+  val finalGrade: String?,
   val curricularUnitState: String,
-  val evaluationType: String,
+  val evaluationType: String?,
 )

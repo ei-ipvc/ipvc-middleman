@@ -7,4 +7,5 @@ object Constants {
   const val PROFILE_ENDPOINT = "https://academicos.ipvc.pt/netpa/page?stage=situacaodealuno"
   const val BASE_ENDPOINT = "https://academicos.ipvc.pt/netpa/"
   const val GRADES_ENDPOINT = "https://academicos.ipvc.pt/netpa/ajax/consultanotasaluno/inscricoes?_dc=1726447964851&cdLectivoFilter=null&periodoFilter=null&anoCurricular=null&estadoFilter=null&disciplinaFilter=null&group=%5B%7B%22property%22%3A%22CD_LECTIVO%22%2C%22direction%22%3A%22desc%22%7D%5D&sort=%5B%7B%22property%22%3A%22CD_LECTIVO%22%2C%22direction%22%3A%22DESC%22%7D%2C%7B%22property%22%3A%22CD_DURACAO%22%2C%22direction%22%3A%22ASC%22%7D%2C%7B%22property%22%3A%22DS_DISCIP%22%2C%22direction%22%3A%22ASC%22%7D%5D"
+  const val CURRICULAR_UNIT_STATUS_ENDPOINT = "https://academicos.ipvc.pt/netpa/ajax/situacaodealuno/tabelaPlanoEstudos?page=1&start=0&limit=-1&group=[{\"property\":\"CD_A_S_CUR\",\"direction\":\"ASC\"}]&sort=[{\"property\":\"CD_A_S_CUR\",\"direction\":\"ASC\"}]"
 }

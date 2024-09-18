@@ -26,8 +26,6 @@ class MoodleAuthorizationService {
       HttpClient.instance.newCall(request).execute().use { response ->
         val data = response.body!!.string()
 
-        println(data)
-
         if(data.contains("invalidlogin")) throw UnauthorizedException()
 
         val res = mapper.readValue<AuthResponse>(data)
