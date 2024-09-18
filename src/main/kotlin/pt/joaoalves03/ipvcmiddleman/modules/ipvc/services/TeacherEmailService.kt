@@ -56,14 +56,6 @@ class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>)
     }
   }
 
-  fun getTeacherEmail(name: String): List<TeacherInfoDTO> {
-    val teachers = getTeacherInfoListByName(name)
-
-    if(filterTeachersByName(teachers, name).isNotEmpty()) return teachers
-
-    return filterTeachersByName(fetchTeacherInfo(), name)
-  }
-
   fun saveTeacherInfo(teacherInfoList: List<TeacherInfoDTO>) {
     redisTemplate.opsForValue().set("teacherInfo", teacherInfoList)
   }

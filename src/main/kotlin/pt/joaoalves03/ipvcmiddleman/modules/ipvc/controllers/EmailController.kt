@@ -13,6 +13,6 @@ import pt.joaoalves03.ipvcmiddleman.modules.ipvc.services.TeacherEmailService
 class EmailController(private val teacherEmailService: TeacherEmailService) {
   @GetMapping("")
   fun getEmail(@RequestParam name: String): ResponseEntity<List<TeacherInfoDTO>> {
-    return ResponseEntity.ok(teacherEmailService.getTeacherEmail(name))
+    return ResponseEntity.ok(teacherEmailService.getTeacherInfoListByName(name))
   }
 }
