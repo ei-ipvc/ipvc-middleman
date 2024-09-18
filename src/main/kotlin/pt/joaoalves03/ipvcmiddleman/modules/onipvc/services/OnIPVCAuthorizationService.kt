@@ -10,7 +10,7 @@ import pt.joaoalves03.ipvcmiddleman.IncorrectCredentialsException
 import java.io.IOException
 
 @Service
-class AuthorizationService {
+class OnIPVCAuthorizationService {
   fun getAuthorization(body: AuthorizeDTO): String {
     val formBody = FormBody.Builder()
       .add("on-user", body.username)

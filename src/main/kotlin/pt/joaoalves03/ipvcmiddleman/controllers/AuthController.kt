@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizationDTO
 import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AuthorizationService as OnIPVCAuth
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.AuthorizationService as AcademicosAuth
-import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.AuthorizationService as MoodleAuth
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.OnIPVCAuthorizationService as OnIPVCAuth
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.AcademicosAuthorizationService as AcademicosAuth
+import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.MoodleAuthorizationService as MoodleAuth
 
 @RestController
 class AuthController(
   val onIPVCAuth: OnIPVCAuth,
   val academicosAuth: AcademicosAuth,
-  val moodleAuth: MoodleAuth,
+  val moodleAuth: MoodleAuth
 ) {
   @PostMapping("authorize")
   fun authorize(
     @RequestBody body: AuthorizeDTO,
     @RequestParam(required = false) onipvc: Boolean,
     @RequestParam(required = false) academicos: Boolean,
-    @RequestParam(required = false) moodle: Boolean
+    @RequestParam(required = false) moodle: Boolean,
   ) : ResponseEntity<AuthorizationDTO> {
     return ResponseEntity.ok(AuthorizationDTO(
       onipvc = if (onipvc) onIPVCAuth.getAuthorization(body) else null,

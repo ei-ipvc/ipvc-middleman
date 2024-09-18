@@ -13,7 +13,7 @@ import java.io.IOException
 import java.net.URLEncoder
 
 @Service
-class AuthorizationService {
+class MoodleAuthorizationService {
   private val mapper = jacksonObjectMapper()
 
   fun getAuthorization(body: AuthorizeDTO): String {

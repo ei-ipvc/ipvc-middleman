@@ -10,7 +10,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import java.io.IOException
 
 @Service
-class AuthorizationService {
+class AcademicosAuthorizationService {
   fun getAuthorization(body: AuthorizeDTO): String {
     val formBody = FormBody.Builder()
       .add("_formsubmitstage", "loginstage")
