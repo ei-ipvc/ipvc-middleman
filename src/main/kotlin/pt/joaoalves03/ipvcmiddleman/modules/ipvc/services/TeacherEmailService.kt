@@ -2,43 +2,76 @@ package pt.joaoalves03.ipvcmiddleman.modules.ipvc.services
 
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.ServiceUnavailableException
 import pt.joaoalves03.ipvcmiddleman.modules.ipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.ipvc.dto.TeacherInfoDTO
 import java.text.Normalizer
 
-object TeacherEmailService {
+@Service
+class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>) {
   private fun normalize(str: String): String {
     return Normalizer.normalize(str, Normalizer.Form.NFD)
       .replace(Regex("/[\\u0300-\\u036f]/g"), "")
   }
 
-  fun getTeacherEmail(name: String): List<TeacherInfoDTO> {
+  private fun filterTeachersByName(
+    teachers: List<TeacherInfoDTO>,
+    name: String,
+    limit: Int = 10
+  ): List<TeacherInfoDTO> {
+    val nameTokens = normalize(name).lowercase().split(" ")
+
+    return teachers.filter { teacher ->
+      nameTokens.all { nameInputToken ->
+        normalize(teacher.name).lowercase().contains(nameInputToken)
+      }
+    }.take(limit)
+  }
+
+  fun fetchTeacherInfo(): List<TeacherInfoDTO> {
     val request = Request.Builder()
       .url(Constants.TEACHER_INFO_ENDPOINT)
       .get()
       .build()
 
     HttpClient.instance.newCall(request).execute().use { response ->
-      if(!response.isSuccessful) throw ServiceUnavailableException()
+      if (!response.isSuccessful) throw ServiceUnavailableException()
 
       val data = Jsoup.parse(response.body!!.string()).select(".corpo-docente > .link-005")
 
-      val nameTokens = normalize(name).lowercase().split(" ")
-
-      return data.map { element ->
+      val list = data.map { element ->
         TeacherInfoDTO(
           name = element.select(".link-005-text > .link-005-item-title").text(),
           email = element.select(".link-005-email > object > a").attr("href")
             .replace("mailto:", "")
         )
-      }.filter { teacher ->
-        nameTokens.all { nameInputToken ->
-          normalize(teacher.name).lowercase().contains(nameInputToken)
-        }
-      }.take(10)
-    }
+      }
 
+      saveTeacherInfo(list)
+
+      return list
+    }
+  }
+
+  fun getTeacherEmail(name: String): List<TeacherInfoDTO> {
+    val teachers = getTeacherInfoListByName(name)
+
+    if(filterTeachersByName(teachers, name).isNotEmpty()) return teachers
+
+    return filterTeachersByName(fetchTeacherInfo(), name)
+  }
+
+  fun saveTeacherInfo(teacherInfoList: List<TeacherInfoDTO>) {
+    redisTemplate.opsForValue().set("teacherInfo", teacherInfoList)
+  }
+
+  fun getTeacherInfoListByName(name: String): List<TeacherInfoDTO> {
+    @Suppress("UNCHECKED_CAST")
+    val data = redisTemplate.opsForValue().get("teacherInfo") as List<TeacherInfoDTO>?
+
+    return filterTeachersByName(data ?: emptyList(), name)
   }
 }
