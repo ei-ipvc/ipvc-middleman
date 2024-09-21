@@ -2,6 +2,7 @@ package pt.joaoalves03.ipvcmiddleman.modules.onipvc.controllers
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -28,12 +29,28 @@ class AttendanceController(val attendanceService: AttendanceService) {
     return ResponseEntity.ok(attendanceService.getAvailableCourses(cookie, username, year))
   }
 
-  @GetMapping("")
+  @GetMapping("{courseId}/{year}")
   fun attendance(
-    @RequestHeader("x-auth-onipvc") cookie: String,
-    @RequestParam("courseId") courseId: String,
-    @RequestParam("year") year: String
+    @PathVariable("courseId") courseId: String,
+    @PathVariable("year") year: String,
+    @RequestHeader("x-auth-onipvc") cookie: String
   ): ResponseEntity<List<AttendanceDTO>> {
-    return ResponseEntity.ok(attendanceService.getAttendance(cookie, courseId, year))
+    return ResponseEntity.ok(attendanceService.getAttendance(cookie, courseId, year, null))
+  }
+
+  @GetMapping("{courseId}/{year}/{unitId}")
+  fun attendanceCourse(
+    @PathVariable("courseId") courseId: String,
+    @PathVariable("year") year: String,
+    @PathVariable("unitId") unitId: String,
+    @RequestHeader("x-auth-onipvc") cookie: String,
+  ): ResponseEntity<AttendanceDTO> {
+    val list = attendanceService.getAttendance(cookie, courseId, year, unitId)
+
+    if (list.isEmpty()) {
+      return ResponseEntity.notFound().build()
+    }
+
+    return ResponseEntity.ok(list[0])
   }
 }

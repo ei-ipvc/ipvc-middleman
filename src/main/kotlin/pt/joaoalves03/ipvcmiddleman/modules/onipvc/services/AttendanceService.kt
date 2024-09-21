@@ -62,7 +62,7 @@ class AttendanceService {
     }
   }
 
-  fun getAttendance(cookie: String, courseId: String, year: String): List<AttendanceDTO> {
+  fun getAttendance(cookie: String, courseId: String, year: String, unitId: String?): List<AttendanceDTO> {
     val body: RequestBody = "{}".toRequestBody("application/json".toMediaTypeOrNull())
 
     val request = Request.Builder()
@@ -78,7 +78,7 @@ class AttendanceService {
 
       val jsonNode = mapper.readTree(data)
 
-      return jsonNode["aaData"].map { row ->
+      val list = jsonNode["aaData"].map { row ->
         val cleanRow = row.map { cell ->
           val soup = Jsoup.parse(cell.toString())
           val div = soup.body().select("div")
@@ -91,6 +91,12 @@ class AttendanceService {
           cleanRow[9], cleanRow[10], cleanRow[11],
           cleanRow[12]
         )
+      }
+
+      if(unitId != null) {
+        return list.filter { it.subjectId == unitId }
+      } else {
+        return list
       }
     }
   }
