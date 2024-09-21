@@ -69,17 +69,25 @@ class ScheduleService {
       val parsedContent = parseSchedulesHtmlContent(response.body!!.string()) ?: return ArrayList()
 
       return parsedContent.map { row ->
-        val (className, classType) = parseTitle(row.title)
+        val (shortName, classType) = parseTitle(row.title)
+        /*val className = Regex("^(\\w+\\d+( . |.))(.*?(?=\\s*[\\/|+-;[\\\\]))")
+          .findAll(row.datauc).first().toString()*/
+
+        var room = Jsoup.parse(row.datasala).text().removePrefix("• ")
+
+        if(Regex("^\\S+ - (.*)\$").matches(room)) {
+          room = room.split(" - ")[1]
+        }
 
         ScheduleDTO(
-          className,
+          shortName,
+          "",
           classType,
           start = row.start,
           end = row.end,
-          stamp = row.datauc,
           id = row.dataeventoid,
           teachers = parseTeachers(row.datadocentes),
-          room = Jsoup.parse(row.datasala).text().removePrefix("• "),
+          room,
           statusColor = row.color,
         )
       }
