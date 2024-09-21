@@ -1,5 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.controllers
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDTO
@@ -7,6 +8,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.ScheduleService
 
 @RestController
 @RequestMapping("/onipvc/schedule")
+@Tag(name = "onIPVC")
 class ScheduleController(private val scheduleService: ScheduleService) {
   @GetMapping("")
   fun schedule(

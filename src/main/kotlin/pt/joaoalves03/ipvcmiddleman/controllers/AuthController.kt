@@ -1,5 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.controllers
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,6 +13,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.academicos.services.AcademicosAuthor
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.MoodleAuthorizationService as MoodleAuth
 
 @RestController
+@Tag(name = "Authentication")
 class AuthController(
   val onIPVCAuth: OnIPVCAuth,
   val academicosAuth: AcademicosAuth,

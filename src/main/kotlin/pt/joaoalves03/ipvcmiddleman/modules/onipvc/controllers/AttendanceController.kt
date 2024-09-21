@@ -1,5 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.controllers
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,6 +15,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 
 @RestController
 @RequestMapping("/onipvc/attendance")
+@Tag(name = "onIPVC")
 class AttendanceController(val attendanceService: AttendanceService) {
   @GetMapping("years")
   fun attendance(@RequestHeader("x-auth-onipvc") cookie: String): ResponseEntity<List<AttendanceYearsDTO>> {
