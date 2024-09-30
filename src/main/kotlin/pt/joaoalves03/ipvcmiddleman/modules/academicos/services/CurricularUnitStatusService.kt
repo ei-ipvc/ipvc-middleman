@@ -15,6 +15,7 @@ class CurricularUnitStatusService {
     val request = Request.Builder()
       .url(Constants.CURRICULAR_UNIT_STATUS_ENDPOINT)
       .header("Cookie", cookie)
+      .header("User-Agent", Constants.USER_AGENT)
       .get()
       .build()
 
