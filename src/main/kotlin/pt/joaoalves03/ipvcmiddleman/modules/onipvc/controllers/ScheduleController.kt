@@ -3,7 +3,7 @@ package pt.joaoalves03.ipvcmiddleman.modules.onipvc.controllers
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.ScheduleService
 
 @RestController
@@ -16,7 +16,7 @@ class ScheduleController(private val scheduleService: ScheduleService) {
     @RequestParam("year") year: String,
     @RequestParam("semester") semester: String,
     @RequestParam("studentId") studentId: String
-  ): ResponseEntity<List<ScheduleDTO>> {
+  ): ResponseEntity<List<ScheduleDto>> {
     return ResponseEntity.ok(scheduleService.getSchedule(cookie, year, semester, studentId))
   }
 }

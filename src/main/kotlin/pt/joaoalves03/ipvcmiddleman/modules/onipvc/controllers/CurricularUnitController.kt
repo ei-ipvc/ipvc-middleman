@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.CurricularUnitDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.CurricularUnitDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.CurricularUnitService
 
 @RestController
@@ -19,7 +19,7 @@ class CurricularUnitController(
   fun getCurricularUnitInfo(
     @RequestParam("courseId") courseId: Int,
     @RequestParam("unitId") unitId: Int,
-  ): ResponseEntity<CurricularUnitDTO> {
+  ): ResponseEntity<CurricularUnitDto> {
     return ResponseEntity.ok(curricularUnitService.fetchCurricularUnitInfo(courseId, unitId))
   }
 }

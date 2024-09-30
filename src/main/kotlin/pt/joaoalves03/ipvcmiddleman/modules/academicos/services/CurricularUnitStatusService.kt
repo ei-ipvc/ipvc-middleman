@@ -5,13 +5,13 @@ import okhttp3.Request
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.CurricularStatusDTO
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.CurricularStatusDto
 
 @Service
 class CurricularUnitStatusService {
   private val mapper = jacksonObjectMapper()
 
-  fun getCurricularUnitStatus(cookie: String): List<List<CurricularStatusDTO>> {
+  fun getCurricularUnitStatus(cookie: String): List<List<CurricularStatusDto>> {
     val request = Request.Builder()
       .url(Constants.CURRICULAR_UNIT_STATUS_ENDPOINT)
       .header("Cookie", cookie)
@@ -27,7 +27,7 @@ class CurricularUnitStatusService {
       }
 
       return values.map { x ->
-        CurricularStatusDTO(
+        CurricularStatusDto(
           evaluationDate = if (x["DT_FIM_DIS"].asText().trim() == "-") null else x["DT_FIM_DIS"].asText().trim(),
           curricularUnitId = x["CD_DISCIP"].asText(),
           schoolYear = x["CD_FMTLECT"].asText(),

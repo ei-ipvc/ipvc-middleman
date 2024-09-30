@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.ServiceUnavailableException
 import pt.joaoalves03.ipvcmiddleman.modules.ipvc.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.ipvc.dto.TeacherInfoDTO
+import pt.joaoalves03.ipvcmiddleman.modules.ipvc.dto.TeacherInfoDto
 import java.text.Normalizer
 
 @Service
@@ -18,10 +18,10 @@ class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>)
   }
 
   private fun filterTeachersByName(
-    teachers: List<TeacherInfoDTO>,
+    teachers: List<TeacherInfoDto>,
     name: String,
     limit: Int = 10
-  ): List<TeacherInfoDTO> {
+  ): List<TeacherInfoDto> {
     val nameTokens = normalize(name).lowercase().split(" ")
 
     return teachers.filter { teacher ->
@@ -31,7 +31,7 @@ class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>)
     }.take(limit)
   }
 
-  fun fetchTeacherInfo(): List<TeacherInfoDTO> {
+  fun fetchTeacherInfo(): List<TeacherInfoDto> {
     val request = Request.Builder()
       .url(Constants.TEACHER_INFO_ENDPOINT)
       .get()
@@ -43,7 +43,7 @@ class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>)
       val data = Jsoup.parse(response.body!!.string()).select(".corpo-docente > .link-005")
 
       val list = data.map { element ->
-        TeacherInfoDTO(
+        TeacherInfoDto(
           name = element.select(".link-005-text > .link-005-item-title").text(),
           email = element.select(".link-005-email > object > a").attr("href")
             .replace("mailto:", "")
@@ -56,13 +56,13 @@ class TeacherEmailService(private val redisTemplate: RedisTemplate<String, Any>)
     }
   }
 
-  fun saveTeacherInfo(teacherInfoList: List<TeacherInfoDTO>) {
+  fun saveTeacherInfo(teacherInfoList: List<TeacherInfoDto>) {
     redisTemplate.opsForValue().set("teacherInfo", teacherInfoList)
   }
 
-  fun getTeacherInfoListByName(name: String): List<TeacherInfoDTO> {
+  fun getTeacherInfoListByName(name: String): List<TeacherInfoDto> {
     @Suppress("UNCHECKED_CAST")
-    val data = redisTemplate.opsForValue().get("teacherInfo") as List<TeacherInfoDTO>?
+    val data = redisTemplate.opsForValue().get("teacherInfo") as List<TeacherInfoDto>?
 
     return filterTeachersByName(data ?: emptyList(), name)
   }

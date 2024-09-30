@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.academicos.dto
 
-data class CurricularStatusDTO(
+data class CurricularStatusDto(
   val evaluationDate: String?,
   val curricularUnitId: String,
   val schoolYear: String,

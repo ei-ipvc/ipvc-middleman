@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.ProfileDTO
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.ProfileDto
 import java.util.*
 
 @Service
@@ -41,7 +41,7 @@ class ProfileService {
       }
   }
 
-  fun getProfile(cookie: String): ProfileDTO {
+  fun getProfile(cookie: String): ProfileDto {
     val request = Request.Builder()
       .url(Constants.PROFILE_ENDPOINT)
       .header("Cookie", cookie)
@@ -55,7 +55,7 @@ class ProfileService {
 
       val (courseId, courseName) = parseCourse(profileData)
 
-      return ProfileDTO(
+      return ProfileDto(
         profileData.select("ul:nth-child(1) > li:nth-child(3)").text(),
         profileData.select("ul:nth-child(1) > li:nth-child(2)").text().replace("Aluno Nº", ""),
         profileData.select("ul:nth-child(1) > li:nth-child(1)").text(),

@@ -5,7 +5,7 @@ import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.TuitionFee
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.TuitionFeeDto
 import java.math.BigDecimal
 
 @Service
@@ -14,7 +14,7 @@ class TuitionFeeService {
     return data.split(" ")[0].toBigDecimal()
   }
 
-  fun getTuitionFees(cookie: String): List<TuitionFee> {
+  fun getTuitionFees(cookie: String): List<TuitionFeeDto> {
     val request = Request.Builder()
       .url(Constants.TUITION_FEES_ENDPOINT)
       .header("Cookie", cookie)
@@ -25,7 +25,7 @@ class TuitionFeeService {
       val data = Jsoup.parse(response.body!!.string())
       val rows = data.body().id("simpletable").select("tr")
 
-      val tuitionFees = ArrayList<TuitionFee>()
+      val tuitionFees = ArrayList<TuitionFeeDto>()
 
       rows.forEach() { row ->
         val cells = row.select("td")
@@ -33,7 +33,7 @@ class TuitionFeeService {
         if(cells.size == 9 && cells[1].text().contains("Propinas")) {
           val paymentDate = cells[5].text().trim()
 
-          tuitionFees.add(TuitionFee(
+          tuitionFees.add(TuitionFeeDto(
             name = cells[1].text().trim(),
             expiryDate = cells[2].text().trim().replace("(1)", ""),
             bankReference = cells[3].text().trim(),

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 
 @RestController
@@ -18,7 +18,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.onipvc.services.AttendanceService
 @Tag(name = "onIPVC")
 class AttendanceController(val attendanceService: AttendanceService) {
   @GetMapping("years")
-  fun attendance(@RequestHeader("x-auth-onipvc") cookie: String): ResponseEntity<List<AttendanceYearsDTO>> {
+  fun attendance(@RequestHeader("x-auth-onipvc") cookie: String): ResponseEntity<List<AttendanceYearsDto>> {
     return ResponseEntity.ok(attendanceService.getAvailableYears(cookie))
   }
 
@@ -27,7 +27,7 @@ class AttendanceController(val attendanceService: AttendanceService) {
     @RequestHeader("x-auth-onipvc") cookie: String,
     @RequestParam("username") username: String,
     @RequestParam("year") year: String
-  ): ResponseEntity<List<AttendanceCourseDTO>> {
+  ): ResponseEntity<List<AttendanceCourseDto>> {
     return ResponseEntity.ok(attendanceService.getAvailableCourses(cookie, username, year))
   }
 
@@ -36,7 +36,7 @@ class AttendanceController(val attendanceService: AttendanceService) {
     @PathVariable("courseId") courseId: String,
     @PathVariable("year") year: String,
     @RequestHeader("x-auth-onipvc") cookie: String
-  ): ResponseEntity<List<AttendanceDTO>> {
+  ): ResponseEntity<List<AttendanceDto>> {
     return ResponseEntity.ok(attendanceService.getAttendance(cookie, courseId, year, null))
   }
 
@@ -46,7 +46,7 @@ class AttendanceController(val attendanceService: AttendanceService) {
     @PathVariable("year") year: String,
     @PathVariable("unitId") unitId: String,
     @RequestHeader("x-auth-onipvc") cookie: String,
-  ): ResponseEntity<AttendanceDTO> {
+  ): ResponseEntity<AttendanceDto> {
     val list = attendanceService.getAttendance(cookie, courseId, year, unitId)
 
     if (list.isEmpty()) {

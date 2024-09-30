@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDto
 
 @Service
 class AttendanceService {
   private val mapper: ObjectMapper = jacksonObjectMapper()
 
-  fun getAvailableYears(cookie: String): List<AttendanceYearsDTO> {
+  fun getAvailableYears(cookie: String): List<AttendanceYearsDto> {
     val request = Request.Builder()
       .url(Constants.ATTENDANCE_YEARS)
       .header("Cookie", cookie)
@@ -33,12 +33,12 @@ class AttendanceService {
       if(options.size == 0) throw UnauthorizedException()
 
       return options.map { x ->
-        AttendanceYearsDTO(x.attr("value"), x.text())
+        AttendanceYearsDto(x.attr("value"), x.text())
       }
     }
   }
 
-  fun getAvailableCourses(cookie: String, username: String, year: String): List<AttendanceCourseDTO> {
+  fun getAvailableCourses(cookie: String, username: String, year: String): List<AttendanceCourseDto> {
     val formBody = FormBody.Builder()
       .add("param_alunosinscricao_idutilizador", username)
       .add("param_alunosinscricao_anoletivo", year)
@@ -57,12 +57,12 @@ class AttendanceService {
       if(options.size == 0) throw UnauthorizedException()
 
       return options.map { x ->
-        AttendanceCourseDTO(x.attr("value"), x.text())
+        AttendanceCourseDto(x.attr("value"), x.text())
       }
     }
   }
 
-  fun getAttendance(cookie: String, courseId: String, year: String, unitId: String?): List<AttendanceDTO> {
+  fun getAttendance(cookie: String, courseId: String, year: String, unitId: String?): List<AttendanceDto> {
     val body: RequestBody = "{}".toRequestBody("application/json".toMediaTypeOrNull())
 
     val request = Request.Builder()
@@ -86,7 +86,7 @@ class AttendanceService {
           div.text()
         }
 
-        AttendanceDTO(
+        AttendanceDto(
           cleanRow[3], cleanRow[4], cleanRow[8],
           cleanRow[9], cleanRow[10], cleanRow[11],
           cleanRow[12]

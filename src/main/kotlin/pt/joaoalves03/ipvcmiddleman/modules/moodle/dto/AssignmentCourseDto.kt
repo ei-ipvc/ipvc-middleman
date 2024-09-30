@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.moodle.dto
 
-data class Assignment(
+data class AssignmentDto (
   val id: Int,
   val courseName: String,
   val name: String,

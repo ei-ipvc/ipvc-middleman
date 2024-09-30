@@ -1,3 +1,3 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto
 
-data class AttendanceCourseDTO (val courseId: String, val courseName: String)
+data class AttendanceCourseDto (val courseId: String, val courseName: String)

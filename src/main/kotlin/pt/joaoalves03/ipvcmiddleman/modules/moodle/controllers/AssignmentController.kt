@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.Assignment
+import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.AssignmentDto
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.AssignmentsService
 
 @RestController
@@ -14,7 +14,7 @@ import pt.joaoalves03.ipvcmiddleman.modules.moodle.services.AssignmentsService
 @Tag(name = "Moodle")
 class AssignmentController(val assignmentsService: AssignmentsService) {
   @GetMapping("")
-  fun getAssignments(@RequestHeader("x-auth-moodle") token: String): ResponseEntity<List<Assignment>> {
+  fun getAssignments(@RequestHeader("x-auth-moodle") token: String): ResponseEntity<List<AssignmentDto>> {
     return ResponseEntity.ok(assignmentsService.getAssignments(token))
   }
 }

@@ -7,26 +7,26 @@ import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.ServiceUnavailableException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.CurricularUnitDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.NameHours
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.CurricularUnitDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.NameHoursDto
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 
 @Service
 class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any>) {
-  private fun parseTeachers(input: String): List<NameHours> {
+  private fun parseTeachers(input: String): List<NameHoursDto> {
     val r1 = Regex("[^(]+(?=\\()", RegexOption.IGNORE_CASE)
     val r2 = Regex("\\d+H", RegexOption.IGNORE_CASE)
 
     val names = r1.findAll(input).map { it.value }.toList()
     val hours = r2.findAll(input).map { it.value.dropLast(1).toFloat() }.toList()
 
-    return names.zip(hours) { name, hour -> NameHours(name, hour) }
+    return names.zip(hours) { name, hour -> NameHoursDto(name, hour) }
   }
 
   // Enjoy :)
-  fun fetchCurricularUnitInfo(courseId: Int, unitId: Int): CurricularUnitDTO {
+  fun fetchCurricularUnitInfo(courseId: Int, unitId: Int): CurricularUnitDto {
     val info = getCurricularUnitInfo(unitId)
     if (info != null && ChronoUnit.DAYS.between(
         Instant.parse(info.lastUpdate),
@@ -57,7 +57,7 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
       val shiftValues = shiftData[1].text().split(" ")
 
       val shifts = List(shiftNames.size) { index ->
-        NameHours(shiftNames[index], shiftValues[index].toFloat())
+        NameHoursDto(shiftNames[index], shiftValues[index].toFloat())
       }
 
       // Syllabus parsing
@@ -69,11 +69,11 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
           val hours = elements[0].replace("H", "").toFloat()
           val content = elements[1]
 
-          NameHours(content, hours)
+          NameHoursDto(content, hours)
         }
 
 
-      val fetchedInfo = CurricularUnitDTO(
+      val fetchedInfo = CurricularUnitDto(
         school = infoSectionLeft.select("b:contains(ESCOLA)").first()!!.nextSibling()!!.toString().trim(),
         schoolYear = infoSectionLeft.select("b:contains(ANO LECTIVO)").first()!!.nextSibling()!!.toString().trim(),
         mainTeacher = parseTeachers(
@@ -114,11 +114,11 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
     }
   }
 
-  fun saveCurricularUnitInfo(unitId: Int, info: CurricularUnitDTO) {
+  fun saveCurricularUnitInfo(unitId: Int, info: CurricularUnitDto) {
     redisTemplate.opsForValue().set("curricularUnitInfo:${unitId}", info)
   }
 
-  fun getCurricularUnitInfo(unitId: Int): CurricularUnitDTO? {
-    return redisTemplate.opsForValue().get("curricularUnitInfo:${unitId}") as CurricularUnitDTO?
+  fun getCurricularUnitInfo(unitId: Int): CurricularUnitDto? {
+    return redisTemplate.opsForValue().get("curricularUnitInfo:${unitId}") as CurricularUnitDto?
   }
 }

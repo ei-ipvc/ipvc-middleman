@@ -6,9 +6,9 @@ import okhttp3.Request
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
-import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
+import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDto
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.AuthResponse
+import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.AuthResponseDto
 import java.io.IOException
 import java.net.URLEncoder
 
@@ -16,7 +16,7 @@ import java.net.URLEncoder
 class MoodleAuthorizationService {
   private val mapper = jacksonObjectMapper()
 
-  fun getAuthorization(body: AuthorizeDTO): String {
+  fun getAuthorization(body: AuthorizeDto): String {
     val request = Request.Builder()
       .url(Constants.loginEndpoint(body.username, URLEncoder.encode(body.password, "utf-8")))
       .get()
@@ -28,7 +28,7 @@ class MoodleAuthorizationService {
 
         if(data.contains("invalidlogin")) throw UnauthorizedException()
 
-        val res = mapper.readValue<AuthResponse>(data)
+        val res = mapper.readValue<AuthResponseDto>(data)
 
         return res.token
       }

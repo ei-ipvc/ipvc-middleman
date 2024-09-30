@@ -2,7 +2,7 @@ package pt.joaoalves03.ipvcmiddleman.modules.academicos.dto
 
 import java.math.BigDecimal
 
-data class TuitionFee(
+data class TuitionFeeDto(
   val name: String,
   val expiryDate: String,
   val bankReference: String?,

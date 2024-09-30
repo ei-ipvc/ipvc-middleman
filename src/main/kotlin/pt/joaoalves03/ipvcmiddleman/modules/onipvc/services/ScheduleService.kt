@@ -10,12 +10,12 @@ import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.RawScheduleDTO
-import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDTO
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.RawScheduleDto
+import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.ScheduleDto
 
 @Service
 class ScheduleService {
-  private fun parseSchedulesHtmlContent(content: String): List<RawScheduleDTO>? {
+  private fun parseSchedulesHtmlContent(content: String): List<RawScheduleDto>? {
     val regex = Regex("events_data\\s=\\s(.+);", RegexOption.MULTILINE)
     val match = regex.find(content) ?: return null
 
@@ -26,7 +26,7 @@ class ScheduleService {
       mapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
       mapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
       mapper.enable(JsonReadFeature.ALLOW_TRAILING_COMMA.mappedFeature())
-      mapper.readValue<List<RawScheduleDTO>>(data)
+      mapper.readValue<List<RawScheduleDto>>(data)
     } catch (e: Exception) {
       null
     }
@@ -51,7 +51,7 @@ class ScheduleService {
       .map { it.replace("• ", "") }
   }
 
-  fun getSchedule(cookie: String, year: String, semester: String, studentId: String): List<ScheduleDTO> {
+  fun getSchedule(cookie: String, year: String, semester: String, studentId: String): List<ScheduleDto> {
     val formBody = FormBody.Builder()
       .add("param_anoletivoA", year)
       .add("param_semestreA", semester)
@@ -79,7 +79,7 @@ class ScheduleService {
           room = room.split(" - ")[1]
         }
 
-        ScheduleDTO(
+        ScheduleDto(
           shortName,
           "",
           classType,

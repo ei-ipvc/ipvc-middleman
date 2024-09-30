@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisHash
 import java.io.Serializable
 
 @RedisHash
-data class TeacherInfoDTO(
+data class TeacherInfoDto(
   @Id
   val name: String,
   val email: String

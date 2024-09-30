@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.academicos.dto
 
-data class ProfileDTO(
+data class ProfileDto(
   val name: String,
   val id: String,
   val school: String,

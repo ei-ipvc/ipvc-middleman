@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.academicos.dto
 
-data class GradeContainerDTO(
+data class GradeContainerDto (
   val average: Float,
-  val grades: List<GradeDTO>
+  val grades: List<GradeDto>
 )

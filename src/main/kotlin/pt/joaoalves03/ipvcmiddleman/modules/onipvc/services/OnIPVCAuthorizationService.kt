@@ -4,14 +4,14 @@ import okhttp3.FormBody
 import okhttp3.Request
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
-import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDTO
+import pt.joaoalves03.ipvcmiddleman.dto.AuthorizeDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.Constants
 import pt.joaoalves03.ipvcmiddleman.IncorrectCredentialsException
 import java.io.IOException
 
 @Service
 class OnIPVCAuthorizationService {
-  fun getAuthorization(body: AuthorizeDTO): String {
+  fun getAuthorization(body: AuthorizeDto): String {
     val formBody = FormBody.Builder()
       .add("on-user", body.username)
       .add("on-pass", body.password)

@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto
 
-data class RawScheduleDTO (
+data class RawScheduleDto (
   val title: String,
   val start: String,
   val end: String,

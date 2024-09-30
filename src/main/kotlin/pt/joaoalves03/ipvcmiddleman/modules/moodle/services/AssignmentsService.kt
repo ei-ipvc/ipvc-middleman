@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.moodle.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.Assignment
+import pt.joaoalves03.ipvcmiddleman.modules.moodle.dto.AssignmentDto
 
 @Service
 class AssignmentsService {
   private val mapper = jacksonObjectMapper()
 
-  fun getAssignments(token: String): List<Assignment> {
+  fun getAssignments(token: String): List<AssignmentDto> {
     val request = Request.Builder()
       .url(Constants.assignmentsEndpoint(token))
       .get()
@@ -25,12 +25,12 @@ class AssignmentsService {
 
       val res = mapper.readTree(data)
 
-      val assignments: MutableList<Assignment> = ArrayList()
+      val assignments: MutableList<AssignmentDto> = ArrayList()
 
       res["courses"].forEach { unit ->
         unit["assignments"].forEach { assignment ->
           assignments.add(
-            Assignment(
+            AssignmentDto(
               assignment["id"].asText().toInt(),
               unit["fullname"].asText(),
               assignment["name"].asText(),

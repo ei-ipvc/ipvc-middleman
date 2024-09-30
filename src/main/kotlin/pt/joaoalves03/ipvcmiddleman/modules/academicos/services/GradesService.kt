@@ -5,17 +5,18 @@ import okhttp3.Request
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeContainerDTO
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeDTO
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeContainerDto
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeDto
 
 @Service
 class GradesService {
   private val mapper = jacksonObjectMapper()
 
-  fun getGrades(cookie: String): GradeContainerDTO {
+  fun getGrades(cookie: String): GradeContainerDto {
     val request = Request.Builder()
       .url(Constants.GRADES_ENDPOINT)
       .header("Cookie", cookie)
+      .header("User-Agent", Constants.USER_AGENT)
       .get()
       .build()
 
@@ -24,7 +25,7 @@ class GradesService {
 
       val grades = jsonNode["result"].mapNotNull { x ->
         if (x["dsAvaliaCalcField"].asText() == "-") null
-        else GradeDTO(
+        else GradeDto(
           evaluationDate = x["dataFimInscricao"].asText().trim(),
           curricularUnitId = x["CD_DISCIP"].asText(),
           schoolYear = x["anoLectivoCalcField"].asText(),
@@ -52,7 +53,7 @@ class GradesService {
         totalCredits += x.credits
       }
 
-      return GradeContainerDTO(
+      return GradeContainerDto(
         average = sum / totalCredits,
         grades
       )

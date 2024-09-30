@@ -1,6 +1,6 @@
 package pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto
 
-data class ScheduleDTO (
+data class ScheduleDto (
   val shortName: String,
   val className: String,
   val classType: String,
