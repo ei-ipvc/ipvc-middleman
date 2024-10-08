@@ -5,40 +5,62 @@ import okhttp3.Request
 import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
-import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.CurricularStatusDto
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.CurricularUnitStatusDto
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeDto
 
 @Service
 class CurricularUnitStatusService {
   private val mapper = jacksonObjectMapper()
 
-  fun getCurricularUnitStatus(cookie: String): List<List<CurricularStatusDto>> {
+  fun getStatus(cookie: String): CurricularUnitStatusDto {
     val request = Request.Builder()
-      .url(Constants.CURRICULAR_UNIT_STATUS_ENDPOINT)
+      .url(Constants.GRADES_ENDPOINT)
       .header("Cookie", cookie)
       .header("User-Agent", Constants.USER_AGENT)
       .get()
       .build()
 
     HttpClient.instance.newCall(request).execute().use { response ->
+      println(response.body!!.string())
+
       val jsonNode = mapper.readTree(response.body!!.string())
 
-      val values = jsonNode["result"].filter { x ->
-        x["turmas"].asText().isNotEmpty()
+      val grades = jsonNode["result"].mapNotNull { x ->
+        if (x["dsAvaliaCalcField"].asText() == "-") null
+        else GradeDto(
+          evaluationDate = x["dataFimInscricao"].asText().trim(),
+          curricularUnitId = x["CD_DISCIP"].asText(),
+          schoolYear = x["anoLectivoCalcField"].asText(),
+          credits = x["ectsCalcField"].asText().split(" ")[0].toInt(),
+          semester = x["CD_DURACAO"].asText().removePrefix("S").toInt(),
+          curricularUnitName = x["DS_DISCIP"].asText(),
+          finalGrade = x["notaFinalCalcField"].asText().toFloat(),
+          curricularUnitState = x["estadoCalcField"].asText(),
+          evaluationType = x["dsAvaliaCalcField"].asText()
+        )
+      }.sortedBy { x -> x.evaluationDate }
+
+      var sum = 0.0f
+      var totalCredits = 0
+
+      for (x in grades) {
+        // If student didn't pass this or did grade improvement exam, skip
+        if ((grades.find { y ->
+            y.curricularUnitName == x.curricularUnitName
+                && y.evaluationType.startsWith("Melhoria")
+          } != null && !x.evaluationType.startsWith("Melhoria"))
+          || x.curricularUnitState == "Reprovado") continue
+
+        sum += x.finalGrade * x.credits
+        totalCredits += x.credits
       }
 
-      return values.map { x ->
-        CurricularStatusDto(
-          evaluationDate = if (x["DT_FIM_DIS"].asText().trim() == "-") null else x["DT_FIM_DIS"].asText().trim(),
-          curricularUnitId = x["CD_DISCIP"].asText(),
-          schoolYear = x["CD_FMTLECT"].asText(),
-          credits = x["NR_CRE_EUR_PD"].asText().split(" ")[0],
-          semester = x["DS_DURACAO_PD"].asText().substringBefore("º Semestre").toInt(),
-          curricularUnitName = x["DS_DISCIP"].asText(),
-          finalGrade = if (x["notaFinalCalc"].asText() == "-") null else x["notaFinalCalc"].asText(),
-          curricularUnitState = x["DS_STATUS"].asText(),
-          evaluationType = if (x["DS_AVALIA"].asText() == "-") null else x["DS_AVALIA"].asText()
-        )
-      }.groupBy { it.schoolYear }.toSortedMap().values.toList()
+      return CurricularUnitStatusDto(
+        average = sum / totalCredits,
+        grades
+      )
     }
   }
+
+
 }
