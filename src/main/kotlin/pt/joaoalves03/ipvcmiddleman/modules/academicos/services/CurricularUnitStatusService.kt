@@ -21,8 +21,6 @@ class CurricularUnitStatusService {
       .build()
 
     HttpClient.instance.newCall(request).execute().use { response ->
-      println(response.body!!.string())
-
       val jsonNode = mapper.readTree(response.body!!.string())
 
       val grades = jsonNode["result"].mapNotNull { x ->
@@ -30,6 +28,7 @@ class CurricularUnitStatusService {
         else GradeDto(
           evaluationDate = x["dataFimInscricao"].asText().trim(),
           curricularUnitId = x["CD_DISCIP"].asText(),
+          curricularYear = x["CD_A_S_CUR"].asInt(),
           schoolYear = x["anoLectivoCalcField"].asText(),
           credits = x["ectsCalcField"].asText().split(" ")[0].toInt(),
           semester = x["CD_DURACAO"].asText().removePrefix("S").toInt(),
