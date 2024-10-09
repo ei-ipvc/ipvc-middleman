@@ -23,26 +23,30 @@ class CurricularUnitStatusService {
     HttpClient.instance.newCall(request).execute().use { response ->
       val jsonNode = mapper.readTree(response.body!!.string())
 
-      val grades = jsonNode["result"].mapNotNull { x ->
-        if (x["dsAvaliaCalcField"].asText() == "-") null
-        else GradeDto(
-          evaluationDate = x["dataFimInscricao"].asText().trim(),
-          curricularUnitId = x["CD_DISCIP"].asText(),
-          curricularYear = x["CD_A_S_CUR"].asInt(),
-          schoolYear = x["anoLectivoCalcField"].asText(),
-          credits = x["ectsCalcField"].asText().split(" ")[0].toInt(),
-          semester = x["CD_DURACAO"].asText().removePrefix("S").toInt(),
-          curricularUnitName = x["DS_DISCIP"].asText(),
-          finalGrade = x["notaFinalCalcField"].asText().toFloat(),
-          curricularUnitState = x["estadoCalcField"].asText(),
-          evaluationType = x["dsAvaliaCalcField"].asText()
-        )
-      }.sortedBy { x -> x.evaluationDate }
+      val grades = jsonNode["result"]
+        .filter { x ->  x["turmasCalcField"] != null && x["estadoCalcField"].asText() != "Reprovado"}
+        .mapNotNull { x ->
+          GradeDto(
+            evaluationDate = x["dataFimInscricao"].asText().trim(),
+            curricularUnitId = x["CD_DISCIP"].asText(),
+            curricularYear = x["CD_A_S_CUR"].asInt(),
+            schoolYear = x["anoLectivoCalcField"].asText(),
+            credits = x["ectsCalcField"].asText().split(" ")[0].toInt(),
+            semester = x["CD_DURACAO"].asText().removePrefix("S").toInt(),
+            curricularUnitName = x["DS_DISCIP"].asText(),
+            finalGrade = if (x["dsAvaliaCalcField"].asText() == "-") null
+                else x["notaFinalCalcField"].asText().toFloat(),
+            curricularUnitState = x["estadoCalcField"].asText(),
+            evaluationType = x["dsAvaliaCalcField"].asText()
+          )
+        }.sortedBy { x -> x.curricularYear }
 
       var sum = 0.0f
       var totalCredits = 0
 
       for (x in grades) {
+        if(x.finalGrade == null) continue
+
         // If student didn't pass this or did grade improvement exam, skip
         if ((grades.find { y ->
             y.curricularUnitName == x.curricularUnitName

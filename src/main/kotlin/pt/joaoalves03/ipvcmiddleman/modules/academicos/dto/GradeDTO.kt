@@ -8,7 +8,7 @@ data class GradeDto(
   val credits: Int,
   val semester: Int,
   val curricularUnitName: String,
-  val finalGrade: Float,
+  val finalGrade: Float?,
   val curricularUnitState: String,
   val evaluationType: String,
 )
