@@ -26,7 +26,7 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
   }
 
   // Enjoy :)
-  fun fetchCurricularUnitInfo(courseId: Int, unitId: Int): CurricularUnitDto {
+  fun fetchCurricularUnitInfo(courseId: String, unitId: String): CurricularUnitDto {
     val info = getCurricularUnitInfo(unitId)
     if (info != null && ChronoUnit.DAYS.between(
         Instant.parse(info.lastUpdate),
@@ -35,7 +35,7 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
     ) return info
 
     val request = Request.Builder()
-      .url(Constants.curricularUnitInfoEndpoint(courseId.toString(), unitId.toString()))
+      .url(Constants.curricularUnitInfoEndpoint(courseId, unitId))
       .get()
       .build()
 
@@ -55,6 +55,8 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
 
       val shiftNames = shiftData[0].text().split(" ")
       val shiftValues = shiftData[1].text().split(" ")
+
+      println(courseId)
 
       val shifts = List(shiftNames.size) { index ->
         NameHoursDto(shiftNames[index], shiftValues[index].toFloat())
@@ -114,11 +116,11 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
     }
   }
 
-  fun saveCurricularUnitInfo(unitId: Int, info: CurricularUnitDto) {
+  fun saveCurricularUnitInfo(unitId: String, info: CurricularUnitDto) {
     redisTemplate.opsForValue().set("curricularUnitInfo:${unitId}", info)
   }
 
-  fun getCurricularUnitInfo(unitId: Int): CurricularUnitDto? {
+  fun getCurricularUnitInfo(unitId: String): CurricularUnitDto? {
     return redisTemplate.opsForValue().get("curricularUnitInfo:${unitId}") as CurricularUnitDto?
   }
 }

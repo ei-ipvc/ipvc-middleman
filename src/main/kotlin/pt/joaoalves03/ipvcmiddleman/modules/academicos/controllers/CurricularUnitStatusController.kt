@@ -23,8 +23,8 @@ class CurricularUnitStatusController(
   @GetMapping("/{courseId}/{id}")
   fun details(
     @RequestHeader("x-auth-academicos") cookie: String,
-    @PathVariable courseId: Int,
-    @PathVariable id: Int
+    @PathVariable courseId: String,
+    @PathVariable id: String
   ): ResponseEntity<DetailedCurricularUnitDTO> {
     return ResponseEntity.ok(DetailedCurricularUnitDTO(
       info = detailsService.fetchCurricularUnitInfo(courseId, id),

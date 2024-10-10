@@ -17,8 +17,8 @@ class CurricularUnitController(
 ) {
   @GetMapping("")
   fun getCurricularUnitInfo(
-    @RequestParam("courseId") courseId: Int,
-    @RequestParam("unitId") unitId: Int,
+    @RequestParam("courseId") courseId: String,
+    @RequestParam("unitId") unitId: String,
   ): ResponseEntity<CurricularUnitDto> {
     return ResponseEntity.ok(curricularUnitService.fetchCurricularUnitInfo(courseId, unitId))
   }
