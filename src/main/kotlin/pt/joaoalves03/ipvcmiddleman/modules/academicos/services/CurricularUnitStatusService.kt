@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service
 import pt.joaoalves03.ipvcmiddleman.HttpClient
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.Constants
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.CurricularUnitStatusDto
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.EvaluationDTO
 import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.GradeDto
+import pt.joaoalves03.ipvcmiddleman.modules.academicos.dto.evaluationType
 
 @Service
 class CurricularUnitStatusService {
@@ -37,7 +39,16 @@ class CurricularUnitStatusService {
             finalGrade = if (x["dsAvaliaCalcField"].asText() == "-") null
                 else x["notaFinalCalcField"].asText().toFloat(),
             curricularUnitState = x["estadoCalcField"].asText(),
-            evaluationType = x["dsAvaliaCalcField"].asText()
+            evaluationType = evaluationType.getOrDefault(x["dsAvaliaCalcField"].asText(), "UNKNOWN"),
+            otherEvaluations = jsonNode["result"]
+              .filter { y -> x["CD_DISCIP"] == y["CD_DISCIP"] && x["dsAvaliaCalcField"] != y["dsAvaliaCalcField"] }
+              .mapNotNull { y ->
+                EvaluationDTO(
+                  date = y["dataFimInscricao"].asText().trim(),
+                  grade = y["notaFinalCalcField"].asText().toFloat(),
+                  type = evaluationType.getOrDefault(y["dsAvaliaCalcField"].asText(), "UNKNOWN")
+                )
+              }
           )
         }.sortedBy { x -> x.curricularYear }
 
