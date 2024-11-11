@@ -73,6 +73,7 @@ class ProfileService {
           .replace("de Ponte de Lima", "")),
         courseId,
         courseName,
+        getFirstLetters(courseName),
         getImage(data, cookie)
       )
     }

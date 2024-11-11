@@ -7,5 +7,6 @@ data class ProfileDto(
   val acronym: String,
   val courseId: String,
   val courseName: String,
+  val courseAcronym: String,
   val image: String
 )
