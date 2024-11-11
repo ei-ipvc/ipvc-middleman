@@ -70,8 +70,7 @@ class ScheduleService {
 
       return parsedContent.map { row ->
         val (shortName, classType) = parseTitle(row.title)
-        /*val className = Regex("^(\\w+\\d+( . |.))(.*?(?=\\s*[\\/|+-;[\\\\]))")
-          .findAll(row.datauc).first().toString()*/
+        val className = row.datauc.split("-")[1].trim()
 
         var room = Jsoup.parse(row.datasala).text().removePrefix("• ")
 
@@ -81,7 +80,7 @@ class ScheduleService {
 
         ScheduleDto(
           shortName,
-          "",
+          className,
           classType,
           start = row.start,
           end = row.end,
