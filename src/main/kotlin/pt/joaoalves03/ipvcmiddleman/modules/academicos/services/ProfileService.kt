@@ -41,6 +41,13 @@ class ProfileService {
       }
   }
 
+  private fun getFirstLetters(str: String): String {
+    return str.split(" ")
+      .filter { it.isNotEmpty() && it.first().isUpperCase() }
+      .map { it.first() }
+      .joinToString("")
+  }
+
   fun getProfile(cookie: String): ProfileDto {
     val request = Request.Builder()
       .url(Constants.PROFILE_ENDPOINT)
@@ -55,10 +62,15 @@ class ProfileService {
 
       val (courseId, courseName) = parseCourse(profileData)
 
+      val schoolName = profileData.select("ul:nth-child(1) > li:nth-child(1)").text()
+
       return ProfileDto(
         profileData.select("ul:nth-child(1) > li:nth-child(3)").text(),
         profileData.select("ul:nth-child(1) > li:nth-child(2)").text().replace("Aluno Nº", ""),
-        profileData.select("ul:nth-child(1) > li:nth-child(1)").text(),
+        schoolName,
+        getFirstLetters(schoolName
+          .replace(" do Instituto Politécnico de Viana do Castelo", "")
+          .replace("de Ponte de Lima", "")),
         courseId,
         courseName,
         getImage(data, cookie)
