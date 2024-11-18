@@ -52,12 +52,18 @@ class ScheduleService {
   }
 
   fun getSchedule(cookie: String, year: String, semester: String, studentId: String): List<ScheduleDto> {
-    val formBody = FormBody.Builder()
-      .add("param_anoletivoA", year)
-      .add("param_semestreA", semester)
-      .add("param_meuhorario_numutilizador", studentId)
-      .add("param_horarios_alunos", "horario_aluno")
-      .build()
+    val formBodyBuilder = FormBody.Builder()
+    
+    year?.let {
+      formBodyBuilder.add("param_anoletivoA", it)
+    }
+    semester?.let {
+      formBodyBuilder.add("param_semestreA", it)
+    }
+    formBodyBuilder.add("param_meuhorario_numutilizador", studentId)
+    formBodyBuilder.add("param_horarios_alunos", "horario_aluno")
+
+    val formBody = formBodyBuilder.build()
 
     val request = Request.Builder()
       .url(Constants.SCHEDULE_ENDPOINT)

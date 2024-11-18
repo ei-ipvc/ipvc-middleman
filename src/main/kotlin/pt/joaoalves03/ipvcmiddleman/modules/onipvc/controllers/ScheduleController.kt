@@ -13,10 +13,10 @@ class ScheduleController(private val scheduleService: ScheduleService) {
   @GetMapping("")
   fun schedule(
     @RequestHeader("x-auth-onipvc") cookie: String,
-    @RequestParam("year") year: String,
-    @RequestParam("semester") semester: String,
+    @RequestParam("year", required = false) year: String?,
+    @RequestParam("semester", required = false) semester: String?,
     @RequestParam("studentId") studentId: String
   ): ResponseEntity<List<ScheduleDto>> {
-    return ResponseEntity.ok(scheduleService.getSchedule(cookie, year, semester, studentId))
+    return ResponseEntity.ok(scheduleService.getSchedule(cookie, year ?: "", semester ?: "", studentId))
   }
 }
