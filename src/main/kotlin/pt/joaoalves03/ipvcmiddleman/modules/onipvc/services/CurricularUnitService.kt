@@ -27,12 +27,19 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
 
   // Enjoy :)
   fun fetchCurricularUnitInfo(courseId: String, unitId: String): CurricularUnitDto {
-    val info = getCurricularUnitInfo(unitId)
-    if (info != null && ChronoUnit.DAYS.between(
-        Instant.parse(info.lastUpdate),
-        Instant.now()
-      ) < 1
-    ) return info
+    var ignoreRedis = false
+
+    try {
+      val info = getCurricularUnitInfo(unitId)
+      if (info != null && ChronoUnit.DAYS.between(
+          Instant.parse(info.lastUpdate),
+          Instant.now()
+        ) < 1
+      ) return info
+    } catch (_: Exception) {
+      ignoreRedis = true
+      println("Redis server unavailable")
+    }
 
     val request = Request.Builder()
       .url(Constants.curricularUnitInfoEndpoint(courseId, unitId))
@@ -55,8 +62,6 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
 
       val shiftNames = shiftData[0].text().split(" ")
       val shiftValues = shiftData[1].text().split(" ")
-
-      println(courseId)
 
       val shifts = List(shiftNames.size) { index ->
         NameHoursDto(shiftNames[index], shiftValues[index].toFloat())
@@ -110,7 +115,8 @@ class CurricularUnitService(private val redisTemplate: RedisTemplate<String, Any
           .format(Instant.now().atOffset(ZoneOffset.UTC))
       )
 
-      saveCurricularUnitInfo(unitId, fetchedInfo)
+      if(!ignoreRedis)
+        saveCurricularUnitInfo(unitId, fetchedInfo)
 
       return fetchedInfo
     }
