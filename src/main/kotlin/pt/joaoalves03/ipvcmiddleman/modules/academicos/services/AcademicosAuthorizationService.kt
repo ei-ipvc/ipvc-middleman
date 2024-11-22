@@ -32,9 +32,21 @@ class AcademicosAuthorizationService {
         if(resBody.contains("\"success\":false"))
           throw IncorrectCredentialsException()
 
-        return response.headers.values("Set-Cookie")
+        val token = response.headers.values("Set-Cookie")
           .find { it.startsWith("JSESSIONID") }
           ?.substringBefore(";").orEmpty()
+
+        // Before the session token is usable, a request needs to be made
+        // to any page that returns a view, so the session gets "activated"
+        val activationRequest = Request.Builder()
+          .url(Constants.DUMMY_ACTIVATION_ENDPOINT)
+          .header("Cookie", token)
+          .get()
+          .build()
+
+        HttpClient.instance.newCall(activationRequest).execute()
+
+        return token
       }
     } catch (e: IOException) {
       return ""
