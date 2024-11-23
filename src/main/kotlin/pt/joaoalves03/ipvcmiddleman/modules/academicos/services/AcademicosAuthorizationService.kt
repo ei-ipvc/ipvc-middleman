@@ -44,7 +44,7 @@ class AcademicosAuthorizationService {
           .get()
           .build()
 
-        HttpClient.instance.newCall(activationRequest).execute()
+        HttpClient.instance.newCall(activationRequest).execute().close()
 
         return token
       }
