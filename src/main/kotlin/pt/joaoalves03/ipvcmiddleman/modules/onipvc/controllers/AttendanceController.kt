@@ -46,13 +46,13 @@ class AttendanceController(val attendanceService: AttendanceService) {
     @PathVariable("year") year: String,
     @PathVariable("unitId") unitId: String,
     @RequestHeader("x-auth-onipvc") cookie: String,
-  ): ResponseEntity<AttendanceDto> {
+  ): ResponseEntity<List<AttendanceDto>> {
     val list = attendanceService.getAttendance(cookie, courseId, year, unitId)
 
     if (list.isEmpty()) {
       return ResponseEntity.notFound().build()
     }
 
-    return ResponseEntity.ok(list[0])
+    return ResponseEntity.ok(list.filter { x -> x.subjectId == unitId })
   }
 }
