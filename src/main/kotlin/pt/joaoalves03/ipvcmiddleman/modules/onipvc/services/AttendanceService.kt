@@ -78,6 +78,10 @@ class AttendanceService {
 
       val jsonNode = mapper.readTree(data)
 
+      if(jsonNode["aaData"].isEmpty) {
+        throw UnauthorizedException()
+      }
+
       val list = jsonNode["aaData"].map { row ->
         val cleanRow = row.map { cell ->
           val soup = Jsoup.parse(cell.toString())

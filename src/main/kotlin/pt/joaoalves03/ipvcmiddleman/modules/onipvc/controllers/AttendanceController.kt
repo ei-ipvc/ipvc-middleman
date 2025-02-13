@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import pt.joaoalves03.ipvcmiddleman.UnauthorizedException
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceCourseDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceDto
 import pt.joaoalves03.ipvcmiddleman.modules.onipvc.dto.AttendanceYearsDto
@@ -47,12 +48,12 @@ class AttendanceController(val attendanceService: AttendanceService) {
     @PathVariable("unitId") unitId: String,
     @RequestHeader("x-auth-onipvc") cookie: String,
   ): ResponseEntity<List<AttendanceDto>> {
-    val list = attendanceService.getAttendance(cookie, courseId, year, unitId)
+    try {
+      val list = attendanceService.getAttendance(cookie, courseId, year, unitId)
 
-    if (list.isEmpty()) {
-      return ResponseEntity.notFound().build()
+      return ResponseEntity.ok(list.filter { x -> x.subjectId == unitId })
+    } catch (ex: UnauthorizedException) {
+      return ResponseEntity.status(401).build()
     }
-
-    return ResponseEntity.ok(list.filter { x -> x.subjectId == unitId })
   }
 }
