@@ -250,7 +250,7 @@ class ScheduleService {
     }
   }
 
-  fun getManualSchedule(cookie: String, year: String, semester: String, classId: String): List<ScheduleDto> {
+  fun searchSchedule(cookie: String, year: String, semester: String, classId: String): List<ScheduleDto> {
     val weeks = getWeekList(cookie, year, semester)
 
     val scheduleList = mutableListOf<ScheduleDto>()

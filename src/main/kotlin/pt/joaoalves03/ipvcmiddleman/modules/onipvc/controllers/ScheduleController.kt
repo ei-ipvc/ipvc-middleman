@@ -24,8 +24,8 @@ class ScheduleController(private val scheduleService: ScheduleService) {
     return ResponseEntity.ok(scheduleService.getSchedule(cookie, year ?: "", semester ?: "", studentId))
   }
 
-  @GetMapping("/manualOptions")
-  fun getManualOptions(
+  @GetMapping("/searchOptions")
+  fun getSearchOptions(
     @RequestHeader("x-auth-onipvc") cookie: String,
   ): ResponseEntity<ManualScheduleInitialOptionsDTO> {
     return try {
@@ -49,19 +49,6 @@ class ScheduleController(private val scheduleService: ScheduleService) {
     }
   }
 
-//  @GetMapping("/weeks")
-//  fun getWeekList(
-//    @RequestHeader("x-auth-onipvc") cookie: String,
-//    @RequestParam("year") year: String,
-//    @RequestParam("semester") semester: String,
-//  ): ResponseEntity<List<OptionPair<String, String>>> {
-//    return try {
-//      ResponseEntity.ok(scheduleService.getWeekList(cookie, year, semester))
-//    } catch (ex: UnauthorizedException) {
-//      ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-//    }
-//  }
-
   @GetMapping("/classes")
   fun getClassList(
     @RequestHeader("x-auth-onipvc") cookie: String,
@@ -76,13 +63,13 @@ class ScheduleController(private val scheduleService: ScheduleService) {
     }
   }
 
-  @GetMapping("/manual/{year}/{semester}/{classId}")
-  fun manualSchedule(
+  @GetMapping("/search/{year}/{semester}/{classId}")
+  fun searchSchedule(
     @RequestHeader("x-auth-onipvc") cookie: String,
     @PathVariable("year") year: String,
     @PathVariable("semester") semester: String,
     @PathVariable("classId") classId: String
   ): ResponseEntity<List<ScheduleDto>> {
-    return ResponseEntity.ok(scheduleService.getManualSchedule(cookie, year, semester, classId))
+    return ResponseEntity.ok(scheduleService.searchSchedule(cookie, year, semester, classId))
   }
 }
