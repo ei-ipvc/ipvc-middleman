@@ -12,4 +12,8 @@ object Constants {
   fun curricularUnitInfoEndpoint(courseId: String, unitId: String): String {
     return "https://on.ipvc.pt/v1/puc.php?cd_curso=$courseId&cd_discip=$unitId&lang=pt"
   }
+  const val MANUAL_SCHEDULE_OPTIONS_ENDPOINT = "https://on.ipvc.pt/v1/modulos/atividadeletiva/horarios_consulta.php"
+  const val COURSE_LIST_ENDPOINT = "https://on.ipvc.pt/v1/modulos/atividadeletiva/source_select_cursosH.php"
+  const val WEEK_LIST_ENDPOINT = "https://on.ipvc.pt/v1/modulos/atividadeletiva/source_select_semanasH.php"
+  const val CLASS_LIST_ENDPOINT = "https://on.ipvc.pt/v1/modulos/atividadeletiva/source_select_turmasH.php"
 }
